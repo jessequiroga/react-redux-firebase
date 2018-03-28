@@ -5,16 +5,13 @@ import { Provider } from "react-redux";
 import { ConnectedRouter } from "react-router-redux";
 import history from "./history";
 
-console.log(ConnectedRouter);
-
+console.log(history.location)
 class App extends Component {
   render() {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <div>
-            <Root />
-          </div>
+          <Root />
         </ConnectedRouter>
       </Provider>
     );
