@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { reduxForm, Field } from "redux-form";
 import validator from "email-validator";
-import ErrorField from "./ErrorField";
+import ErrorField from "./ErrorField"
 
 class SignUpForm extends Component {
   render() {

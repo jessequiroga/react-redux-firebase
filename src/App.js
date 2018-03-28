@@ -4,6 +4,7 @@ import store from "./redux";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "react-router-redux";
 import history from "./history";
+import './config'
 
 console.log(history.location)
 class App extends Component {
