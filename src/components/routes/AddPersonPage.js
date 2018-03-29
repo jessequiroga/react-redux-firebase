@@ -6,13 +6,13 @@ import { addPerson, moduleName } from "../../ducks/people";
 
 class AddPersonPage extends Component {
   handleAddPerson = person => {
-    this.props.addPerson(person);
+    this.props.addPerson(person)
   };
 
   render() {
     return (
       <div>
-        <NewPersonForm onSubmit={this.handleAddPerson} />
+        <NewPersonForm onSubmit={this.handleAddPerson}/>
       </div>
     );
   }

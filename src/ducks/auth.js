@@ -5,6 +5,9 @@ import { put, call, cps, all, take } from "redux-saga/effects";
 import { push } from "react-router-redux";
 //Actions
 export const moduleName = "auth";
+export const SIGN_IN_REQUEST = `${appName}/${moduleName}/SIGN_IN_REQUEST`;
+export const SIGN_IN_SUCCESS = `${appName}/${moduleName}/SIGN_IN_SUCCESS`;
+export const SIGN_IN_ERROR = `${appName}/${moduleName}/SIGN_IN_ERROR`;
 export const SIGN_UP_REQUEST = `${appName}/${moduleName}/SIGN_UP_REQUEST`;
 export const SIGN_UP_SUCCESS = `${appName}/${moduleName}/SIGN_UP_SUCCESS`;
 export const SIGN_UP_ERROR = `${appName}/${moduleName}/SIGN_UP_ERROR`;
@@ -24,12 +27,21 @@ export default function reducer(state = new ReducerRecord(), action) {
   switch (type) {
     case SIGN_UP_REQUEST:
       return state.set("loading", true);
+    case SIGN_IN_REQUEST:
+      return state.set("loading", true);
     case SIGN_UP_SUCCESS:
       return state
         .set("loading", false)
         .set("user", payload.user)
         .set("error", null);
+    case SIGN_IN_SUCCESS:
+      return state
+        .set("loading", false)
+        .set("user", payload.user)
+        .set("error", null);
     case SIGN_UP_ERROR:
+      return state.set("loading", false).set("error", payload.error);
+    case SIGN_IN_ERROR:
       return state.set("loading", false).set("error", payload.error);
     case SIGN_OUT_SUCCESS:
       return new ReducerRecord();
@@ -39,6 +51,38 @@ export default function reducer(state = new ReducerRecord(), action) {
 }
 
 //=== ACTION CREATORS ====//
+export function signIn(user) {
+  return {
+    type: SIGN_IN_REQUEST,
+    payload: user
+  };
+}
+
+export function* signInSage() {
+  const auth = firebase.auth();
+  console.log('-----', 1)
+  try {
+    const action = yield take(SIGN_IN_REQUEST);
+    console.log('-----', 2)
+    const user = yield call(
+      [auth, auth.signInWithEmailAndPassword],
+      action.payload.email,
+      action.payload.password
+    );
+
+    yield put({
+      type: SIGN_IN_SUCCESS,
+      payload: { user }
+    });
+  } catch (error) {
+    console.log('-----', 3)
+    yield put({
+      type: SIGN_IN_ERROR,
+      payload: error
+    });
+  }
+}
+
 export function signUp(user) {
   return {
     type: SIGN_UP_REQUEST,
@@ -102,7 +146,7 @@ export function* signOutSaga() {
 }
 
 export function* sagaSignUp() {
-  yield all([signUpSaga(), watchStatusChange(), signOutSaga()]);
+  yield all([signInSage(), signUpSaga(), watchStatusChange(), signOutSaga()]);
 }
 
 //=== ACTION CREATORS ====//

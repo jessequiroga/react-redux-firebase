@@ -1,15 +1,17 @@
 import React, { Component } from "react";
-import { reduxForm, Field } from "redux-form";
+import { reduxForm, Field} from "redux-form";
 import validator from "email-validator";
 import ErrorField from "../auth/ErrorField";
 
 class NewPersonForm extends Component {
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, reset} = this.props;
     return (
       <div>
         <h2>Person Form</h2>
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={handleSubmit}
+        >
           <Field name="firstName" component={ErrorField} />
           <Field name="lastName" component={ErrorField} />
           <Field name="email" component={ErrorField} />
@@ -30,6 +32,10 @@ const validate = ({ firstName, email }) => {
 
   return errors;
 };
+
+const onSubmitSuccess = res => {
+  return res
+}
 
 export default reduxForm({
   form: "person",
