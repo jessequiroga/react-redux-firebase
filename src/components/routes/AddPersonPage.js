@@ -12,10 +12,7 @@ class AddPersonPage extends Component {
   render() {
     return (
       <div>
-        <Route
-          path="/people"
-          render={() => <NewPersonForm onSubmit={this.handleAddPerson} />}
-        />
+        <NewPersonForm onSubmit={this.handleAddPerson} />
       </div>
     );
   }

@@ -32,9 +32,13 @@ class AuthPage extends Component {
               </NavLink>
             </li>
             <li>
-              {" "}
               <NavLink to="/people" activeClassName="active">
                 ADD PERSON
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/admin" activeClassName="active">
+                ADMIN
               </NavLink>
             </li>
           </ul>

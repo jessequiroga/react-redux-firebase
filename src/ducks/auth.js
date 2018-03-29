@@ -2,11 +2,14 @@ import firebase from "firebase";
 import { Record } from "immutable";
 import { appName } from "../config";
 import { put, call, cps, all, take } from "redux-saga/effects";
+import { push } from "react-router-redux";
 //Actions
 export const moduleName = "auth";
-const SIGN_UP_REQUEST = `${appName}/${moduleName}/SIGN_UP_REQUEST`;
-const SIGN_UP_SUCCESS = `${appName}/${moduleName}/SIGN_UP_SUCCESS`;
-const SIGN_UP_ERROR = `${appName}/${moduleName}/SIGN_UP_ERROR`;
+export const SIGN_UP_REQUEST = `${appName}/${moduleName}/SIGN_UP_REQUEST`;
+export const SIGN_UP_SUCCESS = `${appName}/${moduleName}/SIGN_UP_SUCCESS`;
+export const SIGN_UP_ERROR = `${appName}/${moduleName}/SIGN_UP_ERROR`;
+export const SIGN_OUT_REQUEST = `${appName}/${moduleName}/SIGN_OUT_REQUEST`;
+export const SIGN_OUT_SUCCESS = `${appName}/${moduleName}/SIGN_OUT_SUCCESS`;
 
 const ReducerRecord = Record({
   user: null,
@@ -28,6 +31,8 @@ export default function reducer(state = new ReducerRecord(), action) {
         .set("error", null);
     case SIGN_UP_ERROR:
       return state.set("loading", false).set("error", payload.error);
+    case SIGN_OUT_SUCCESS:
+      return new ReducerRecord();
     default:
       return state;
   }
@@ -46,7 +51,6 @@ export function* signUpSaga() {
 
   while (true) {
     const action = yield take(SIGN_UP_REQUEST);
-
     try {
       const user = yield call(
         [auth, auth.createUserWithEmailAndPassword],
@@ -69,7 +73,6 @@ export function* signUpSaga() {
 
 export function* watchStatusChange() {
   const auth = firebase.auth();
-
   try {
     const user = yield cps([auth, auth.onAuthStateChanged]);
   } catch (user) {
@@ -80,8 +83,26 @@ export function* watchStatusChange() {
   }
 }
 
+export function signOut() {
+  return {
+    type: SIGN_OUT_REQUEST
+  };
+}
+
+export function* signOutSaga() {
+  const auth = firebase.auth();
+
+  try {
+    const action = yield take(SIGN_OUT_REQUEST);
+    yield call([auth, auth.signOut]);
+    yield put({
+      type: SIGN_OUT_SUCCESS
+    });
+  } catch (error) {}
+}
+
 export function* sagaSignUp() {
-  yield all([signUpSaga()]);
+  yield all([signUpSaga(), watchStatusChange(), signOutSaga()]);
 }
 
 //=== ACTION CREATORS ====//
