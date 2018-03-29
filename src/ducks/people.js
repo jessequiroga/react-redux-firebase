@@ -1,12 +1,12 @@
 import { appName } from "../config";
 import { Record, List } from "immutable";
-import { put, call, takeEvery, all } from "redux-saga/effects";
+import { put, call, takeEvery } from "redux-saga/effects";
 import { generateID } from "./helpers";
 
 export const moduleName = "people";
 //ACTIONS
-const ADD_PERSON = `${appName}/${moduleName}/ADD_PERSON`;
-const ADD_PERSON_REQUEST = `${appName}/${moduleName}/ADD_PERSON_REQUEST`;
+export const ADD_PERSON = `${appName}/${moduleName}/ADD_PERSON`;
+export const ADD_PERSON_REQUEST = `${appName}/${moduleName}/ADD_PERSON_REQUEST`;
 
 const ReducerState = Record({
   entities: new List([])
@@ -55,7 +55,4 @@ export function* sagaAddPerson() {
   yield takeEvery(ADD_PERSON_REQUEST, addPersonSaga);
 }
 
-export function* peopleRootSaga() {
-  yield all([sagaAddPerson()]);
-}
 //========= AC ====================
