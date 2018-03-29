@@ -5,7 +5,7 @@ import { Route, NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { signUp, moduleName } from "../../ducks/auth";
 
-import Loading from '../Loading'
+import Loading from "../Loading";
 
 class AuthPage extends Component {
   handleSignUp = user => {
@@ -20,12 +20,24 @@ class AuthPage extends Component {
       <div>
         <h1>Auth Page</h1>
         <nav>
-          <NavLink to="/auth/signin" activeClassName="active">
-            Sign In
-          </NavLink>
-          <NavLink to="/auth/signup" activeClassName="active">
-            Sign Up
-          </NavLink>
+          <ul>
+            <li>
+              <NavLink to="/auth/signin" activeClassName="active">
+                Sign In
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/auth/signup" activeClassName="active">
+                Sign Up
+              </NavLink>
+            </li>
+            <li>
+              {" "}
+              <NavLink to="/people" activeClassName="active">
+                ADD PERSON
+              </NavLink>
+            </li>
+          </ul>
         </nav>
         <Route
           path="/auth/signin"

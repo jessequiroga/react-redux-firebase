@@ -34,7 +34,6 @@ export default function reducer(state = new ReducerRecord(), action) {
 
 //AC
 export function signUp(user) {
-  console.log('auth', user)
   return dispatch => {
     dispatch({
       type: SIGN_UP_REQUEST

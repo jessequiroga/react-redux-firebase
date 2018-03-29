@@ -21,5 +21,5 @@ class ProtectedRoute extends Component {
 }
 
 export default connect(state => ({
-  authorized: state[moduleName].user
-}))(ProtectedRoute);
+  authorized: !!state[moduleName].user
+}), null, null, {pure: false})(ProtectedRoute);
