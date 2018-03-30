@@ -60,10 +60,8 @@ export function signIn(user) {
 
 export function* signInSage() {
   const auth = firebase.auth();
-  console.log('-----', 1)
   try {
     const action = yield take(SIGN_IN_REQUEST);
-    console.log('-----', 2)
     const user = yield call(
       [auth, auth.signInWithEmailAndPassword],
       action.payload.email,
@@ -75,10 +73,9 @@ export function* signInSage() {
       payload: { user }
     });
   } catch (error) {
-    console.log('-----', 3)
     yield put({
       type: SIGN_IN_ERROR,
-      payload: error
+      error
     });
   }
 }

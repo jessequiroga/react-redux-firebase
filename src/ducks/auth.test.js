@@ -26,4 +26,12 @@ it("Component AUth", () => {
 
   expect(testSage.next().value).toEqual(take(SIGN_UP_REQUEST));
 
+  // const error = new Error;
+  
+  // expect(testSage.throw(error).value).toEqual(
+  //   put({
+  //     type: SIGN_IN_ERROR,
+  //     payload: error
+  //   })
+  // );
 });
