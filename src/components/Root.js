@@ -24,7 +24,7 @@ class Root extends Component {
         <Route path="/people" component={AddPersonPage} />
         <Route path="/events" component={EventsPage} />
         <ProtectedRoute path="/admin" component={AdminPage} />
-        <ProtectedRoute path="/people" component={AdminPage} />
+        {/* <ProtectedRoute path="/people" component={AdminPage} /> */}
         {btn}
       </div>
     );

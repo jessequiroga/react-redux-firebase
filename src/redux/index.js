@@ -4,7 +4,7 @@ import logger from "redux-logger";
 import history from "../history";
 import { routerMiddleware } from "react-router-redux";
 import createSagaMiddleware from 'redux-saga'
-import {saga} from '../ducks/saga'
+import {rootSaga} from '../ducks/saga'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -18,6 +18,6 @@ const store = createStore(reducer, enhancer);
 window.store = store;
 
 
-sagaMiddleware.run(saga)
+sagaMiddleware.run(rootSaga)
 
 export default store;
