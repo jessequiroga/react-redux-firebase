@@ -1,39 +1,56 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { moduleName, fetchAll, eventsListSelector } from "../../ducks/events";
-import { Table, Column } from "react-virtualized";
-import 'react-virtualized/styles.css'
+import { moduleName, fetchLazy, eventsListSelector } from "../../ducks/events";
+import { Table, Column, InfiniteLoader } from "react-virtualized";
+import "react-virtualized/styles.css";
 
 class EventsList extends Component {
   componentDidMount() {
-    this.props.fetchAll();
+    this.props.fetchLazy();
   }
 
   render() {
-    const { events, loading } = this.props;
-    const TableWidth = 768
-    const columnWidth = TableWidth / 4
+    const { events, loading, loaded } = this.props;
+    const TableWidth = 768;
+    const columnWidth = TableWidth / 4;
 
-    if (loading) {
-      return <h2>Loading...</h2>;
-    }
+    // if (loading) {
+    //   return <h2>Loading...</h2>;
+    // }
 
     return (
-      <Table
-        rowCount={events.length}
-        rowGetter={this.rowGetter}
-        rowHeight = {40}
-        width={TableWidth}
-        height={300}
-        overscanColumnCount = {5} 
+      <InfiniteLoader
+        isRowLoaded={this.isRowLoaded}
+        rowCount={loaded ? loaded : this.props.events.length + 1}
+        loadMoreRows={this.loadMoreRows}
       >
-        <Column dataKey="title" label="Name" width={columnWidth} />
-        <Column dataKey="where" label="Wher" width={columnWidth} />
-        <Column dataKey="when" label="When" width={columnWidth} />
-        <Column dataKey="month" label="Month" width={columnWidth} />
-      </Table>
+        {({ onRowsRendered, registerChild }) => (
+          <Table
+            ref={registerChild}
+            rowCount={events.length}
+            rowGetter={this.rowGetter}
+            rowHeight={40}
+            width={TableWidth}
+            height={300}
+            overscanColumnCount={5}
+            onRowsRendered={onRowsRendered}
+          >
+            <Column dataKey="title" label="Name" width={columnWidth} />
+            <Column dataKey="where" label="Wher" width={columnWidth} />
+            <Column dataKey="when" label="When" width={columnWidth} />
+            <Column dataKey="month" label="Month" width={columnWidth} />
+          </Table>
+        )}
+      </InfiniteLoader>
     );
   }
+
+  isRowLoaded = ({ index }) => index < this.props.events.length;
+
+  loadMoreRows = () => {
+    console.log("loadMoreRows");
+    this.props.fetchLazy();
+  };
 
   rowGetter = ({ index }) => {
     return this.props.events[index];
@@ -59,5 +76,5 @@ export default connect(
     events: eventsListSelector(state),
     loading: state[moduleName].loading
   }),
-  { fetchAll }
+  { fetchLazy }
 )(EventsList);
