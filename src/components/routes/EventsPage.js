@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import EventsList from '../events/EventsList'
+import VirtualizedEventsList from '../events/VirtualizedEventsList'
 
 class EventsPage extends Component {
   render() {
@@ -8,7 +8,7 @@ class EventsPage extends Component {
         <h1>
           Events Page
         </h1>
-        <EventsList />
+        <VirtualizedEventsList />
       </div>
     );
   }
