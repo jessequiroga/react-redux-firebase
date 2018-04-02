@@ -1,7 +1,9 @@
 import { appName } from "../../config";
 import { Record, OrderedMap } from "immutable";
-import firebase from 'firebase'
-import { all, take, put, call} from "redux-saga/effects";
+import firebase from "firebase";
+import { all, take, put, call } from "redux-saga/effects";
+import { createSelector } from "reselect";
+import { fbDataToEntities } from "../helpers";
 
 /**
  * Constants
@@ -14,6 +16,15 @@ export const FETCH_ALL_SUCCESS = `${prefix}/FETCH_ALL_SUCCESS`;
 /**
  * REDUCER
  **/
+const EventItemRecord = Record({
+  uid: null,
+  title: null,
+  url: null,
+  where: null,
+  when: null,
+  month: null,
+  submissionDeadline: null
+});
 export const ReducerRecord = Record({
   entities: new OrderedMap({}),
   loading: false,
@@ -21,7 +32,7 @@ export const ReducerRecord = Record({
 });
 
 export default function reducer(state = new ReducerRecord(), action) {
-  const { type, payload} = action;
+  const { type, payload } = action;
 
   switch (type) {
     case FETCH_ALL_REQUEST:
@@ -30,7 +41,7 @@ export default function reducer(state = new ReducerRecord(), action) {
       return state
         .set("loading", false)
         .set("loaded", true)
-        .set("entities", new OrderedMap(payload));
+        .set("entities", fbDataToEntities(payload, EventItemRecord));
     default:
       return state;
   }
@@ -39,6 +50,15 @@ export default function reducer(state = new ReducerRecord(), action) {
 /**
  * SELECTORS
  **/
+
+export const stateSelector = state => state[moduleName];
+export const entitiesSelector = createSelector(
+  stateSelector,
+  state => state.entities
+);
+export const eventsListSelector = createSelector(entitiesSelector, entities =>
+  entities.valueSeq().toArray()
+);
 
 /**
  * AC
