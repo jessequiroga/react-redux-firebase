@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { ConnectedRouter } from "react-router-redux";
 import history from "./history";
 import './config'
+import './mocks'
 
 console.log(history.location)
 class App extends Component {
