@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Table, Column } from "react-virtualized";
+import { List } from "react-virtualized";
 import {
   moduleName,
   eventsListSelector,
   loadAllPerson
 } from "../../ducks/people";
+import PeopleCard from "./PeopleCard";
 
 class PeopleList extends Component {
   componentDidMount() {
@@ -14,27 +15,20 @@ class PeopleList extends Component {
 
   render() {
     const { people } = this.props;
-    const TableWidth = 768;
-    const columnWidth = TableWidth / 3;
-
     return (
-      <Table
-        rowCount = {people.length}
-        rowGetter={this.rowGetter}
-        rowHeight={40}
-        width={TableWidth}
+      <List
+        width={300}
         height={300}
-      >
-        <Column dataKey="firstName" label="Name" width={columnWidth} />
-        <Column dataKey="lastName" label="Last Name" width={columnWidth} />
-        <Column dataKey="email" label="E-mail" width={columnWidth} />
-      </Table>
+        rowCount={people.length}
+        rowHeight={100}
+        rowRenderer={this.rowRenderer}
+      />
     );
   }
 
-  rowGetter = ({index}) => {
-    return this.props.people[index];
-  }
+  rowRenderer = ({ key, index, isScrolling, isVisible, style }) => (
+    <PeopleCard key={key} person={this.props.people[index]} style={style} />
+  );
 }
 
 export default connect(

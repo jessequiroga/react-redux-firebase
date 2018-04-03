@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import NewPersonForm from "../people/NewPersonForm";
-import PeopleList from '../people/PeopleList'
+import PeopleTable from '../people/PeopleTable'
 import { Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { addPerson, moduleName } from "../../ducks/people";
@@ -14,7 +14,7 @@ class AddPersonPage extends Component {
     return (
       <div>
         <NewPersonForm onSubmit={this.handleAddPerson}/>
-        <PeopleList />
+        <PeopleTable />
       </div>
     );
   }
