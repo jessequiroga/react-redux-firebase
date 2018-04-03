@@ -15,10 +15,11 @@ class PeopleList extends Component {
 
   render() {
     const { people } = this.props;
+    console.log(people.length)
     return (
       <List
         width={300}
-        height={300}
+        height={200}
         rowCount={people.length}
         rowHeight={100}
         rowRenderer={this.rowRenderer}
@@ -33,8 +34,7 @@ class PeopleList extends Component {
 
 export default connect(
   state => ({
-    people: eventsListSelector(state),
-    loading: state[moduleName].loading
+    people: eventsListSelector(state)
   }),
   { loadAllPerson }
 )(PeopleList);

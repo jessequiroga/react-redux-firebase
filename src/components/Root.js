@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Route } from "react-router-dom";
 import AdminPage from "./routes/AdminPage";
 import AuthPage from "./routes/AuthPage";
 import EventsPage from "./routes/EventsPage";
@@ -7,6 +6,7 @@ import AddPersonPage from "./routes/AddPersonPage";
 import ProtectedRoute from "./common/ProtectedRoute";
 import { connect } from "react-redux";
 import { moduleName, signOut } from "../ducks/auth";
+import { Route, NavLink } from "react-router-dom";
 
 class Root extends Component {
   render() {
@@ -20,6 +20,30 @@ class Root extends Component {
 
     return (
       <div>
+        <nav>
+          <ul>
+            <li>
+              <NavLink to="/auth/signin" activeClassName="active">
+                Sign In
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/auth/signup" activeClassName="active">
+                Sign Up
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/people" activeClassName="active">
+                ADD PERSON
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/admin" activeClassName="active">
+                ADMIN
+              </NavLink>
+            </li>
+          </ul>
+        </nav>
         <Route path="/auth" component={AuthPage} />
         <Route path="/people" component={AddPersonPage} />
         <Route path="/events" component={EventsPage} />

@@ -1,6 +1,16 @@
 import { appName } from "../../config";
 import { Record, OrderedMap } from "immutable";
-import { put, call, all, take } from "redux-saga/effects";
+import {
+  put,
+  call,
+  all,
+  take,
+  fork,
+  spawn,
+  cancel,
+  cancelled
+} from "redux-saga/effects";
+import { delay, eventChannel } from "redux-saga";
 import { generateID } from "../helpers";
 import firebase from "firebase";
 import { fbDataToEntities } from "../helpers";
@@ -56,7 +66,6 @@ export const eventsListSelector = createSelector(entitiesSelector, entities =>
   entities.valueSeq().toArray()
 );
 
-
 /**
  * AC
  **/
@@ -95,7 +104,7 @@ export const addPersonSaga = function*() {
 
 export const loadAllPersonSaga = function*() {
   while (true) {
-    yield take([ADD_PERSON, FETCH_ALL_REQUEST]);
+    yield take(FETCH_ALL_REQUEST);
 
     yield put({
       type: FETCH_ALL_START
@@ -112,7 +121,52 @@ export const loadAllPersonSaga = function*() {
   }
 };
 
+// export const backgroundSyncSaga = function*() {
+//   try {
+//     while (true) {
+//       yield call(console.log, "===backgroundSyncSaga");
+//       yield delay(2000);
+//     }
+//   } finally {
+//     if (yield cancelled) {
+//       console.log("===", "canseled by saga");
+//     } else {
+//       console.log("===", "canseled by some error");
+//     }
+//   }
+// };
+
+// export const cancelSyncSAGA = function*() {
+//   const task = yield fork(backgroundSyncSaga);
+
+//   yield delay(6000);
+//   yield cancel(task);
+// };
+
+const createPeopleSocket = () =>
+  eventChannel(emmit => {
+    const ref = firebase.database().ref("person");
+    const callback = data => emmit({ data });
+    ref.on("value", callback);
+
+    return () => ref.off("value", callback);
+  });
+
+export const realtimeSync = function*() {
+  const channel = yield call(createPeopleSocket);
+
+  while (true) {
+    const { data } = yield take(channel);
+
+    yield put({
+      type: FETCH_ALL_SUCCESS,
+      payload: data.val()
+    });
+  }
+};
+
 export function* saga() {
+  yield spawn(realtimeSync);
   yield all([addPersonSaga(), loadAllPersonSaga()]);
 }
 
